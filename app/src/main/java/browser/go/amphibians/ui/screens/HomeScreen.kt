@@ -28,51 +28,56 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import browser.go.amphibians.AmphibiansApp
 import browser.go.amphibians.R
+import browser.go.amphibians.model.Amphibians
 import browser.go.amphibians.ui.theme.AmphibiansTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import java.nio.file.WatchEvent
 
 @Composable
-fun HomeScreen(contentPadding: PaddingValues = PaddingValues(0.dp)) {
-    AmphibiansItems(contentPadding = contentPadding);
+fun HomeScreen(amphibiansUiState: AmphibiansUiState,
+               contentPadding: PaddingValues = PaddingValues(0.dp)) {
+    when(amphibiansUiState){
+        is AmphibiansUiState.Success -> AmphibiansItems(amphibiansUiState.amphibianses, contentPadding = contentPadding)
+        is AmphibiansUiState.Error -> ErrorScreen({})
+        is AmphibiansUiState.Loading -> LoadingScreen()
+    }
 }
 
 @Composable
-fun AmphibiansItems(contentPadding: PaddingValues = PaddingValues(0.dp),modifier: Modifier = Modifier)
+fun AmphibiansItems(amphibianses: List<Amphibians>, contentPadding: PaddingValues = PaddingValues(0.dp), modifier: Modifier = Modifier)
 {
-    val itemsList = (0..5).toList()
-
     LazyColumn(
         contentPadding = contentPadding
     ) {
-        items(itemsList) {
+        items(amphibianses) {
            // Text("Item is $it")
-            AmphibiansCardItem()
+            AmphibiansCardItem(it)
         }
     }
 }
 
 @Composable
-fun AmphibiansCardItem(modifier: Modifier = Modifier) {
+fun AmphibiansCardItem(amphibians: Amphibians, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.padding(10.dp),
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Column(modifier = modifier){
-            Text(text = stringResource(R.string.Amphibians_name),
+            Text(text = amphibians.name,
                 modifier = Modifier.padding(10.dp),
                 style = MaterialTheme.typography.titleLarge)
-            Image(
-                painter = painterResource(R.drawable.loading_img),
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current).data(amphibians.img_src)
+                    .crossfade(true).build(),
+                error = painterResource(R.drawable.ic_broken_image),
+                placeholder = painterResource(R.drawable.loading_img),
                 contentDescription = stringResource(R.string.Amphibians_photo),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Gray)
+                modifier = Modifier.fillMaxWidth()
             )
-            Text(text = stringResource(R.string.Amphibians_desc),
+            Text(text = amphibians.description +"...",
                 modifier = Modifier.padding(10.dp),
                 style = MaterialTheme.typography.bodyMedium)
         }
@@ -114,6 +119,6 @@ fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
 fun GreetingPreview3() {
     AmphibiansTheme{
         //AmphibiansCardItem()
-        AmphibiansItems();
+
     }
 }
