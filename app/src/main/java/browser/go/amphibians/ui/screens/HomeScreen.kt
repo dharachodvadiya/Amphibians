@@ -35,15 +35,17 @@ import java.nio.file.WatchEvent
 
 @Composable
 fun HomeScreen(contentPadding: PaddingValues = PaddingValues(0.dp)) {
-    AmphibiansItems();
+    AmphibiansItems(contentPadding = contentPadding);
 }
 
 @Composable
-fun AmphibiansItems(modifier: Modifier = Modifier)
+fun AmphibiansItems(contentPadding: PaddingValues = PaddingValues(0.dp),modifier: Modifier = Modifier)
 {
     val itemsList = (0..5).toList()
 
-    LazyColumn() {
+    LazyColumn(
+        contentPadding = contentPadding
+    ) {
         items(itemsList) {
            // Text("Item is $it")
             AmphibiansCardItem()
