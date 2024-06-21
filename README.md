@@ -9,10 +9,6 @@ Amphibians App is a sample Android application built with Kotlin and Jetpack Com
 - Handles loading, success, and error states using LiveData and State in ViewModel.
 - Demonstrates clean architecture with separation of concerns: data, domain, and presentation layers.
 
-## Screenshots
-
-_Insert screenshots of your app in action if available._
-
 ## Tech Stack
 
 - Kotlin
