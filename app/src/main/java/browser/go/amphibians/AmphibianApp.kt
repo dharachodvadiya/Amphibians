@@ -31,7 +31,7 @@ fun AmphibiansApp() {
             modifier = Modifier.fillMaxSize()
         ) {
             HomeScreen(
-                amphibiansViewModel = viewModel(),
+                amphibianViewModel = viewModel(),
                 contentPadding = it
             )
         }

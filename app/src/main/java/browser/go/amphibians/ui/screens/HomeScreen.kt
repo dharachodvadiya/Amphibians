@@ -30,23 +30,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import browser.go.amphibians.R
-import browser.go.amphibians.model.Amphibians
+import browser.go.amphibians.model.Amphibian
 import browser.go.amphibians.ui.theme.AmphibiansTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
 @Composable
-fun HomeScreen(amphibiansViewModel: AmphibiansViewModel,
+fun HomeScreen(amphibianViewModel: AmphibianViewModel,
                contentPadding: PaddingValues = PaddingValues(0.dp)) {
-    when(amphibiansViewModel.amphibiansUiState){
-        is AmphibiansUiState.Success -> AmphibiansItems((amphibiansViewModel.amphibiansUiState as AmphibiansUiState.Success).amphibians,amphibiansViewModel::toggleExpanded, contentPadding = contentPadding)
-        is AmphibiansUiState.Error -> ErrorScreen({})
-        is AmphibiansUiState.Loading -> LoadingScreen()
+    when(amphibianViewModel.amphibianUiState){
+        is AmphibianUiState.Success -> AmphibiansItems((amphibianViewModel.amphibianUiState as AmphibianUiState.Success).amphibians,amphibianViewModel::toggleExpanded, contentPadding = contentPadding)
+        is AmphibianUiState.Error -> ErrorScreen({})
+        is AmphibianUiState.Loading -> LoadingScreen()
     }
 }
 
 @Composable
-fun AmphibiansItems(amphibianses: List<Amphibians>, onToggleExpanded: (Amphibians) -> Unit,  contentPadding: PaddingValues = PaddingValues(0.dp), modifier: Modifier = Modifier)
+fun AmphibiansItems(amphibianses: List<Amphibian>, onToggleExpanded: (Amphibian) -> Unit, contentPadding: PaddingValues = PaddingValues(0.dp), modifier: Modifier = Modifier)
 {
     LazyColumn(
         contentPadding = contentPadding,
@@ -60,7 +60,7 @@ fun AmphibiansItems(amphibianses: List<Amphibians>, onToggleExpanded: (Amphibian
 }
 
 @Composable
-fun AmphibiansCardItem(amphibians: Amphibians, onToggleExpanded: (Amphibians) -> Unit, modifier: Modifier = Modifier) {
+fun AmphibiansCardItem(amphibian: Amphibian, onToggleExpanded: (Amphibian) -> Unit, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.padding(10.dp),
         shape = MaterialTheme.shapes.medium,
@@ -70,23 +70,23 @@ fun AmphibiansCardItem(amphibians: Amphibians, onToggleExpanded: (Amphibians) ->
             Row(modifier = Modifier.padding(10.dp),
                 verticalAlignment = Alignment.CenterVertically)
             {
-                Text(text = amphibians.name,
+                Text(text = amphibian.name,
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.weight(1f))
                 IconButton(onClick = {
                     //amphibians.isExpanded.value != amphibians.isExpanded.value
-                    onToggleExpanded(amphibians)
+                    onToggleExpanded(amphibian)
                 }) {
                     Icon(
-                        imageVector = if (amphibians.isExpanded.value) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                        contentDescription = if (amphibians.isExpanded.value) "Collapse" else "Expand"
+                        imageVector = if (amphibian.isExpanded.value) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                        contentDescription = if (amphibian.isExpanded.value) "Collapse" else "Expand"
                     )
                 }
             }
 
-            if (amphibians.isExpanded.value){
+            if (amphibian.isExpanded.value){
                 AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current).data(amphibians.imgSrc)
+                    model = ImageRequest.Builder(context = LocalContext.current).data(amphibian.imgSrc)
                         .crossfade(true).build(),
                     error = painterResource(R.drawable.ic_broken_image),
                     placeholder = painterResource(R.drawable.loading_img),
@@ -94,7 +94,7 @@ fun AmphibiansCardItem(amphibians: Amphibians, onToggleExpanded: (Amphibians) ->
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxWidth()
                 )
-                Text(text = amphibians.description +"...",
+                Text(text = amphibian.description +"...",
                     modifier = Modifier.padding(10.dp),
                     style = MaterialTheme.typography.bodyMedium)
             }

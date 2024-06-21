@@ -3,7 +3,7 @@
     <string name="loading_failed">Failed to load</string>
     <string name="retry">Retry</string>
     <string name="loading">Loading</string>
-    <string name="Amphibians_photo">Amphibians photo</string>
-    <string name="Amphibians_name">Amphibians Name</string>
-    <string name="Amphibians_desc">Amphibians Description</string>
+    <string name="Amphibians_photo">Amphibian\'s photo</string>
+    <string name="Amphibians_name">Amphibian\'s Name</string>
+    <string name="Amphibians_desc">Amphibian\'s Description</string>
 </resources>
