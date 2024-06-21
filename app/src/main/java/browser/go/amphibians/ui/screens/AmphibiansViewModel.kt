@@ -16,7 +16,7 @@ import java.io.IOException
 
 
 sealed interface AmphibiansUiState {
-    data class Success(val amphibianses: List<Amphibians>) : AmphibiansUiState
+    data class Success(val amphibians: List<Amphibians>) : AmphibiansUiState
     data object Error : AmphibiansUiState
     data object Loading : AmphibiansUiState
 }
@@ -34,7 +34,9 @@ class AmphibiansViewModel : ViewModel() {
         viewModelScope.launch {
             amphibiansUiState = AmphibiansUiState.Loading
             amphibiansUiState = try {
-                val listResult = AmphibiansApi.retrofitService.getAmphibians()
+                val listResult = AmphibiansApi.retrofitService.getAmphibians().map {
+                    Amphibians(it.name, it.type, it.description, it.img_src,  mutableStateOf(false))
+                }
                 AmphibiansUiState.Success(
                     listResult
                 )
@@ -44,6 +46,10 @@ class AmphibiansViewModel : ViewModel() {
                 AmphibiansUiState.Error
             }
         }
+    }
+
+    fun toggleExpanded(amphibian: Amphibians) {
+        amphibian.isExpanded.value = !amphibian.isExpanded.value
     }
 
 }

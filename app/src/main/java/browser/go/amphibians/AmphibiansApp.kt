@@ -37,7 +37,7 @@ fun AmphibiansApp() {
                 viewModel(factory = MarsViewModel.Factory)*/
             val amphibiansViewModel: AmphibiansViewModel = viewModel()
             HomeScreen(
-                amphibiansUiState = amphibiansViewModel.amphibiansUiState,
+                amphibiansViewModel = amphibiansViewModel,
                 contentPadding = it
             )
         }

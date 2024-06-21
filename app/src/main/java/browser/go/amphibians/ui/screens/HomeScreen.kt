@@ -1,18 +1,25 @@
 package browser.go.amphibians.ui.screens
 
+import android.icu.lang.UCharacter.VerticalOrientation
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,51 +42,69 @@ import coil.request.ImageRequest
 import java.nio.file.WatchEvent
 
 @Composable
-fun HomeScreen(amphibiansUiState: AmphibiansUiState,
+fun HomeScreen(amphibiansViewModel: AmphibiansViewModel,
                contentPadding: PaddingValues = PaddingValues(0.dp)) {
-    when(amphibiansUiState){
-        is AmphibiansUiState.Success -> AmphibiansItems(amphibiansUiState.amphibianses, contentPadding = contentPadding)
+    when(amphibiansViewModel.amphibiansUiState){
+        is AmphibiansUiState.Success -> AmphibiansItems((amphibiansViewModel.amphibiansUiState as AmphibiansUiState.Success).amphibians,amphibiansViewModel::toggleExpanded, contentPadding = contentPadding)
         is AmphibiansUiState.Error -> ErrorScreen({})
         is AmphibiansUiState.Loading -> LoadingScreen()
     }
 }
 
 @Composable
-fun AmphibiansItems(amphibianses: List<Amphibians>, contentPadding: PaddingValues = PaddingValues(0.dp), modifier: Modifier = Modifier)
+fun AmphibiansItems(amphibianses: List<Amphibians>, onToggleExpanded: (Amphibians) -> Unit,  contentPadding: PaddingValues = PaddingValues(0.dp), modifier: Modifier = Modifier)
 {
     LazyColumn(
         contentPadding = contentPadding
     ) {
-        items(amphibianses) {
+        items(amphibianses) { amphibians->
            // Text("Item is $it")
-            AmphibiansCardItem(it)
+            AmphibiansCardItem(amphibians,{onToggleExpanded(it)})
         }
     }
 }
 
 @Composable
-fun AmphibiansCardItem(amphibians: Amphibians, modifier: Modifier = Modifier) {
+fun AmphibiansCardItem(amphibians: Amphibians, onToggleExpanded: (Amphibians) -> Unit, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.padding(10.dp),
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        Column(modifier = modifier){
-            Text(text = amphibians.name,
-                modifier = Modifier.padding(10.dp),
-                style = MaterialTheme.typography.titleLarge)
-            AsyncImage(
-                model = ImageRequest.Builder(context = LocalContext.current).data(amphibians.img_src)
-                    .crossfade(true).build(),
-                error = painterResource(R.drawable.ic_broken_image),
-                placeholder = painterResource(R.drawable.loading_img),
-                contentDescription = stringResource(R.string.Amphibians_photo),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Text(text = amphibians.description +"...",
-                modifier = Modifier.padding(10.dp),
-                style = MaterialTheme.typography.bodyMedium)
+        Column(){
+            Row(modifier = Modifier.padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically)
+            {
+                Text(text = amphibians.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.weight(1f))
+                IconButton(onClick = {
+                    //amphibians.isExpanded.value != amphibians.isExpanded.value
+                    onToggleExpanded(amphibians)
+                }) {
+                    Icon(
+                        imageVector = if (amphibians.isExpanded.value) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                        contentDescription = if (amphibians.isExpanded.value) "Collapse" else "Expand"
+                    )
+                }
+            }
+
+            if (amphibians.isExpanded.value){
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current).data(amphibians.img_src)
+                        .crossfade(true).build(),
+                    error = painterResource(R.drawable.ic_broken_image),
+                    placeholder = painterResource(R.drawable.loading_img),
+                    contentDescription = stringResource(R.string.Amphibians_photo),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text(text = amphibians.description +"...",
+                    modifier = Modifier.padding(10.dp),
+                    style = MaterialTheme.typography.bodyMedium)
+            }
+
+
         }
 
     }
@@ -119,6 +144,13 @@ fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
 fun GreetingPreview3() {
     AmphibiansTheme{
         //AmphibiansCardItem()
-
+        /*AmphibiansCardItem(
+            Amphibians(
+            name = "aaa",
+            type = "aaa",
+            description = "aaa",
+            img_src = "https://dfd.com"
+            )
+        )*/
     }
 }
