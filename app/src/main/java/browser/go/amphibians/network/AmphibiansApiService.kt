@@ -1,9 +1,6 @@
 package browser.go.amphibians.network
 
-import android.util.Log
-import browser.go.amphibians.model.Amphibians
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import okhttp3.MediaType.Companion.toMediaType
+import browser.go.amphibians.model.AmphibianApiModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -22,7 +19,7 @@ private val retrofit = Retrofit.Builder()
 interface AmphibiansApiService {
 
     @GET("amphibians")
-    suspend fun getAmphibians(): List<Amphibians>
+    suspend fun getAmphibians(): List<AmphibianApiModel>
 }
 
 object AmphibiansApi {

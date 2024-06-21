@@ -1,8 +1,6 @@
 package browser.go.amphibians.ui.screens
 
-import android.icu.lang.UCharacter.VerticalOrientation
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,21 +23,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import browser.go.amphibians.AmphibiansApp
 import browser.go.amphibians.R
 import browser.go.amphibians.model.Amphibians
 import browser.go.amphibians.ui.theme.AmphibiansTheme
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import java.nio.file.WatchEvent
 
 @Composable
 fun HomeScreen(amphibiansViewModel: AmphibiansViewModel,
@@ -55,7 +49,8 @@ fun HomeScreen(amphibiansViewModel: AmphibiansViewModel,
 fun AmphibiansItems(amphibianses: List<Amphibians>, onToggleExpanded: (Amphibians) -> Unit,  contentPadding: PaddingValues = PaddingValues(0.dp), modifier: Modifier = Modifier)
 {
     LazyColumn(
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
+        modifier = modifier
     ) {
         items(amphibianses) { amphibians->
            // Text("Item is $it")
@@ -91,7 +86,7 @@ fun AmphibiansCardItem(amphibians: Amphibians, onToggleExpanded: (Amphibians) ->
 
             if (amphibians.isExpanded.value){
                 AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current).data(amphibians.img_src)
+                    model = ImageRequest.Builder(context = LocalContext.current).data(amphibians.imgSrc)
                         .crossfade(true).build(),
                     error = painterResource(R.drawable.ic_broken_image),
                     placeholder = painterResource(R.drawable.loading_img),
@@ -143,14 +138,6 @@ fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview3() {
     AmphibiansTheme{
-        //AmphibiansCardItem()
-        /*AmphibiansCardItem(
-            Amphibians(
-            name = "aaa",
-            type = "aaa",
-            description = "aaa",
-            img_src = "https://dfd.com"
-            )
-        )*/
+
     }
 }
